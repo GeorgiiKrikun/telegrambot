@@ -2,6 +2,7 @@
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler
 from telegram.ext import Filters
+import mimetypes
 import logging
 
 updater = Updater(token='695112427:AAGlDG_vmb9UdRxKxuCvCuw5ba8ISdFahBQ')
@@ -53,7 +54,14 @@ def messagesave(bot, update):
         cap.write(update.message.text)
         cap.close()
         bot.send_message(chat_id=update.message.chat_id, text="Text saved")
-    
+    if (update.message.document != None):
+        desc=open("description/"+current_number,"w")
+        desc.write("doc\n")
+        desc.close()
+        incomefile=update.message.document.get_file();
+    	incomefile.download(custom_path="docs/"+current_number+mimetypes.guess_extension(update.message.document.mime_type))
+        bot.send_message(chat_id=update.message.chat_id, text=mimetypes.guess_extension(update.message.document.mime_type)+" saved")
+  
 
     current_number_file=open("current_number","w")
     current_number_file.write(str(int(current_number)+1))
