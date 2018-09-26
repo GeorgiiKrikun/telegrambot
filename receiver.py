@@ -30,11 +30,11 @@ def messagesave(bot, update):
     current_number_file.close()
 
     if (len(update.message.photo) != 0):
- 	desc=open("description/"+current_number,"w")
+        desc=open("description/"+current_number,"w")
         desc.write("photo\n")
         incomephotos=update.message.photo
-    	incomefile=incomephotos[len(incomephotos)-1].get_file();
-    	incomefile.download(custom_path="pictures/"+current_number+".jpg")
+        incomefile=incomephotos[len(incomephotos)-1].get_file();
+        incomefile.download(custom_path="pictures/"+current_number+".jpg")
         bot.send_message(chat_id=update.message.chat_id, text="Photo saved")
         if (update.message.caption != None):
             #bot.send_message(chat_id=update.message.chat_id, text="caption "+update.message.caption)
@@ -43,9 +43,6 @@ def messagesave(bot, update):
             cap.write(update.message.caption)
             cap.close()
             bot.send_message(chat_id=update.message.chat_id, text="Caption saved")
-        else:
-            desc.write("nocap")
-        desc.close()
     if (update.message.text != None):
         desc=open("description/"+current_number,"w")
         desc.write("text\n")
@@ -55,13 +52,37 @@ def messagesave(bot, update):
         cap.close()
         bot.send_message(chat_id=update.message.chat_id, text="Text saved")
     if (update.message.document != None):
+        print("document")
         desc=open("description/"+current_number,"w")
         desc.write("doc\n")
-        desc.close()
         incomefile=update.message.document.get_file();
-    	incomefile.download(custom_path="docs/"+current_number+mimetypes.guess_extension(update.message.document.mime_type))
+        incomefile.download(custom_path="docs/"+current_number+mimetypes.guess_extension(update.message.document.mime_type))
         bot.send_message(chat_id=update.message.chat_id, text=mimetypes.guess_extension(update.message.document.mime_type)+" saved")
-  
+        desc.write(mimetypes.guess_extension(update.message.document.mime_type)+'\n')
+        if (update.message.caption != None):
+            #bot.send_message(chat_id=update.message.chat_id, text="caption "+update.message.caption)
+            desc.write("cap")
+            cap=open("text/"+current_number,"w")
+            cap.write(update.message.caption)
+            cap.close()
+            bot.send_message(chat_id=update.message.chat_id, text="Caption saved")
+        desc.close()
+    if (update.message.video != None):
+        print("video")
+        desc=open("description/"+current_number,"w")
+        desc.write("video\n")
+        incomefile=update.message.video.get_file();
+        incomefile.download(custom_path="videos/"+current_number)
+        bot.send_message(chat_id=update.message.chat_id, text="video saved")
+        #desc.write(mimetypes.guess_extension(update.message.document.mime_type)+'\n')
+        if (update.message.caption != None):
+            #bot.send_message(chat_id=update.message.chat_id, text="caption "+update.message.caption)
+            desc.write("cap")
+            cap=open("text/"+current_number,"w")
+            cap.write(update.message.caption)
+            cap.close()
+            bot.send_message(chat_id=update.message.chat_id, text="Caption saved")
+        desc.close()
 
     current_number_file=open("current_number","w")
     current_number_file.write(str(int(current_number)+1))
