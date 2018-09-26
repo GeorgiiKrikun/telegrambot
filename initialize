@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+mkdir description docs pictures text videos
+echo 1 > curent_number
