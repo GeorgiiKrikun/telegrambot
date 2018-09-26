@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 
+echo 1 > current_number
 mkdir description docs pictures text videos
-echo 1 > curent_number
