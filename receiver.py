@@ -4,6 +4,7 @@ from telegram.ext import MessageHandler
 from telegram.ext import Filters
 import mimetypes
 import logging
+import subprocess
 
 updater = Updater(token='695112427:AAGlDG_vmb9UdRxKxuCvCuw5ba8ISdFahBQ')
 
@@ -19,6 +20,11 @@ start_handler = CommandHandler('start',start)
 
 dispatcher.add_handler(start_handler)
 
+#/stop react
+def stop(num):
+    subprocess.call(["rm","-v","description/"+num])                
+
+
 #MessageHandler
 
 def messagesave(bot, update):
@@ -28,6 +34,15 @@ def messagesave(bot, update):
     current_number_file=open("current_number","r")
     current_number=current_number_file.read()
     current_number_file.close()
+
+    if (update.message.text != None ):
+        comarr = update.message.text.split(' ')
+        if ((comarr[0] == '/stop') & (len(comarr) > 1) ):
+            stop(comarr[1])
+            bot.send_message(chat_id=update.message.chat_id, text="Task number "+comarr[1] +" stopped")
+            return
+    
+    bot.send_message(chat_id=update.message.chat_id, text="Your task number = "+ current_number+". Use it if you want to stop bot from posting it in form: /stop "+current_number)
 
     if (len(update.message.photo) != 0):
         desc=open("description/"+current_number,"w")
@@ -88,9 +103,8 @@ def messagesave(bot, update):
     current_number_file.write(str(int(current_number)+1))
     
     print(update.effective_user.username)
-    
+       
 #photo_handler=MessageHandler(Filters.photo,imagesave)
 message_handler=MessageHandler(Filters.all,messagesave)
-
 dispatcher.add_handler(message_handler)
 updater.start_polling()
