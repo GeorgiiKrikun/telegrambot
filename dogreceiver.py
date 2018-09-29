@@ -11,12 +11,19 @@ import threading
 
 
 times=[]
-for i in range(24):
-        for j in range(60):
-                times.append(time(i,j,0))
+times.append(time(6,0,0))
+times.append(time(9,0,0))
+times.append(time(11,0,0))
+times.append(time(13,0,0))
+times.append(time(15,0,0))
+times.append(time(18,0,0))
 
-chat="@temporalgog"
-#chat="@DogueCatalogue"
+#for i in range(24):
+#        for j in range(60):
+#                times.append(time(i,j,0))
+
+#chat="@temporalgog"
+chat="@DogueCatalogue"
 
 updater = Updater(token='695112427:AAGlDG_vmb9UdRxKxuCvCuw5ba8ISdFahBQ')
 dispatcher = updater.dispatcher
@@ -123,11 +130,14 @@ def sendstuff():
                 print("no files")
                 return
         laststr=last_file[len(last_file)-2]
-        print(laststr)
-        print(laststr)
         description_file=open("description/"+laststr,"r")
         desc=description_file.read().split('\n')
         description_file.close()
+        if len(desc <= 1):
+                bot.send_message(chat_id="@goglike",text="something is wrong with " + laststr)
+                subprocess.call(["rm","-v","description/"+laststr])
+                sendstuff()
+                return
         updater = Updater(token='473906094:AAHPLdTeCEPLrPPxOLu2mUn9T_Wp1Oi9YaY')
         bot=updater.bot
         if (desc[0]=='text'):
