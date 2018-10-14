@@ -5,4 +5,8 @@ docs/
 videos/
 current_number
 receiveroutput
-senderoutput
+recieveroutput
+receivererror
+recievererror
+start
+starttest

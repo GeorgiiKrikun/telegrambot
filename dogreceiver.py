@@ -16,7 +16,7 @@ times.append(time(9,0,0))
 times.append(time(11,0,0))
 times.append(time(13,0,0))
 times.append(time(15,0,0))
-times.append(time(18,0,0))
+times.append(time(18,30,0))
 
 #for i in range(24):
 #        for j in range(60):
@@ -25,7 +25,7 @@ times.append(time(18,0,0))
 #chat="@temporalgog"
 chat="@DogueCatalogue"
 
-updater = Updater(token='695112427:AAGlDG_vmb9UdRxKxuCvCuw5ba8ISdFahBQ')
+updater = Updater(token='695112427:AAGlDG_vmb9UdRxKxuCvCuw5ba8ISdFahBQ',request_kwargs={'read_timeout': 60, 'connect_timeout': 60})
 dispatcher = updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',level=logging.INFO)
 
@@ -133,7 +133,7 @@ def sendstuff():
         description_file=open("description/"+laststr,"r")
         desc=description_file.read().split('\n')
         description_file.close()
-        if len(desc <= 1):
+        if ((desc[0] != "photo") & (desc[0] != "text") & (desc[0] != "doc") & (desc[0] != "video")):
                 bot.send_message(chat_id="@goglike",text="something is wrong with " + laststr)
                 subprocess.call(["rm","-v","description/"+laststr])
                 sendstuff()
