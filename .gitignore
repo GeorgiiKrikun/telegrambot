@@ -3,6 +3,7 @@ pictures/
 text/
 docs/
 videos/
+__pycache__/
 current_number
 receiveroutput
 recieveroutput
@@ -10,3 +11,4 @@ receivererror
 recievererror
 start
 starttest
+
