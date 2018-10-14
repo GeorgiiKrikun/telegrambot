@@ -3,7 +3,6 @@ from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler
 from telegram.ext import Filters
 import mimetypes
-import logging
 import subprocess
 from datetime import datetime,time,timedelta
 import time as tt
@@ -11,37 +10,65 @@ import threading
 
 
 times=[]
-times.append(time(6,0,0))
-times.append(time(9,0,0))
-times.append(time(11,0,0))
-times.append(time(13,0,0))
-times.append(time(15,0,0))
-times.append(time(18,30,0))
+#times.append(time(6,0,0))
+#times.append(time(9,0,0))
+#times.append(time(11,0,0))
+#times.append(time(13,0,0))
+#times.append(time(15,0,0))
+#times.append(time(18,30,0))
 
 #for i in range(24):
 #        for j in range(60):
 #                times.append(time(i,j,0))
+sender=''
+receiver=''
+chat=''
+#chat="@DogueCatalogue"
 
-#chat="@temporalgog"
-chat="@DogueCatalogue"
 
-updater = Updater(token='695112427:AAGlDG_vmb9UdRxKxuCvCuw5ba8ISdFahBQ',request_kwargs={'read_timeout': 60, 'connect_timeout': 60})
-dispatcher = updater.dispatcher
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',level=logging.INFO)
+
+
 
 #/start Handling
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="SOBAKI ETO PROSTO BLYAD OHUENNAYA TEMA")
 
-start_handler = CommandHandler('start',start)
 
-dispatcher.add_handler(start_handler)
 
 #/stop react
 def stop(num):
     subprocess.call(["rm","-v","description/"+num])                
 
-
+def initialize():
+    global sender,receiver,times,chat
+    configfile=open("config.ini")
+    config=configfile.read().split('\n')
+    config=[string for string in config if string!='']
+    config=[string for string in config if string[0]!='#']
+    times=[]
+    #setting sender token
+    for i in config:
+        if ('sender=' in i):
+            sender=i.replace('sender=','').strip()
+    #setting receiver token
+    for i in config:
+        if ('receiver=' in i):
+            receiver=i.replace('receiver=','').strip()
+    #setting up chat
+    for i in config:
+        if ('chat=' in i):
+            chat=i.replace('chat=','').strip()
+    for i in config:
+        if (('time=' in i) & ( not ('everyminute' in i))):
+            temp=i.replace('time=','').strip().split(':')
+            times.append(time(int(temp[0]),int(temp[1]),int(temp[2])))
+    for i in config:
+        if ('time=everyminute' in i):
+            times=[]
+            for j in range(24):
+                for k in range(60):
+                    times.append(time(j,k,0))  
+           
 #MessageHandler
 def messagesave(bot, update):
     if ((update.effective_user.username != "goglike") & (update.effective_user.username != "Leenza") & (update.effective_user.username != "kireenkov")):
@@ -138,7 +165,7 @@ def sendstuff():
                 subprocess.call(["rm","-v","description/"+laststr])
                 sendstuff()
                 return
-        updater = Updater(token='473906094:AAHPLdTeCEPLrPPxOLu2mUn9T_Wp1Oi9YaY')
+        updater = Updater(token=sender)
         bot=updater.bot
         if (desc[0]=='text'):
                 caption_file=open("text/"+laststr,"r")
@@ -201,6 +228,10 @@ def senderstart():
 		        print("Putting myself asleep till midnight");
 		        tt.sleep(24*60*60-currenttime+1);
 
+initialize()
+
+updater = Updater(token=receiver,request_kwargs={'read_timeout': 60, 'connect_timeout': 60})
+dispatcher = updater.dispatcher
 
 NUtimes=[timetofulltime(i) for i in times]
 
@@ -208,6 +239,8 @@ NUtimes=[timetofulltime(i) for i in times]
 #photo_handler=MessageHandler(Filters.photo,imagesave)
 message_handler=MessageHandler(Filters.all,messagesave)
 dispatcher.add_handler(message_handler)
+start_handler = CommandHandler('start',start)
+dispatcher.add_handler(start_handler)
 senderthreading = threading.Thread(target=senderstart,name="senderthread")
 senderthreading.daemon = True
 senderthreading.start()
