@@ -34,39 +34,39 @@ def sendstuff(sender,chat):
                 caption_file.close()
                 bot.send_message(chat_id=chat,text=caption)
         if ((desc[0]=='photo') & (desc[1] != 'cap')):
-                picture=open("pictures/"+laststr+'.jpg','rb')
-                bot.send_photo(chat_id=chat, photo=picture)
-                picture.close();
+                bot.send_photo(chat_id=chat, photo=desc[2])
         if ((desc[0]=='photo') & (desc[1] == 'cap')):
-                picture=open("pictures/"+laststr+'.jpg','rb')
                 caption_file=open("text/"+laststr,"r")
                 caption=caption_file.read()
                 caption_file.close()
-                bot.send_photo(chat_id=chat, photo=picture,caption=caption)
-                picture.close()
+                bot.send_photo(chat_id=chat, photo=desc[2],caption=caption)
+        if ((desc[0]=='doc') & (desc[1] != 'cap')):
+                bot.send_document(chat_id=chat, document=desc[2])
+        if ((desc[0]=='doc') & (desc[1] == 'cap')):
+                caption_file=open("text/"+laststr,"r")
+                caption=caption_file.read()
+                caption_file.close()
+                bot.send_document(chat_id=chat, document=desc[2],caption=caption)
         if ((desc[0]=='video') & (desc[1] != 'cap')):
-                video=open("videos/"+laststr,'rb')
-                bot.send_video(chat_id=chat, video=video)
-                video.close();
+                bot.send_video(chat_id=chat, video=desc[2])
         if ((desc[0]=='video') & (desc[1] == 'cap')):
-                video=open("videos/"+laststr,'rb')
                 caption_file=open("text/"+laststr,"r")
                 caption=caption_file.read()
                 caption_file.close()
-                bot.send_video(chat_id=chat, video=video,caption=caption)
-                video.close()
-        if (len(desc)==3):        
-                if ((desc[0]=='doc') & (desc[2] != 'cap')):
-                        doc=open("docs/"+laststr+desc[1],'rb')
-                        bot.send_document(chat_id=chat, document=doc)
-                        doc.close();
-                if ((desc[0]=='doc') & (desc[2] == 'cap')):
-                        doc=open("docs/"+laststr+desc[1],'rb')
-                        caption_file=open("text/"+laststr,"r")
-                        caption=caption_file.read()
-                        caption_file.close()
-                        bot.send_document(chat_id=chat, document=doc,caption=caption)
-                        doc.close();
+                bot.send_video(chat_id=chat, video=desc[2], caption=caption)
+        
+        #if (len(desc)==3):        
+        #        if ((desc[0]=='doc') & (desc[2] != 'cap')):
+        #                doc=open("docs/"+laststr+desc[1],'rb')
+        #                bot.send_document(chat_id=chat, document=doc)
+        #                doc.close();
+        #        if ((desc[0]=='doc') & (desc[2] == 'cap')):
+        #                doc=open("docs/"+laststr+desc[1],'rb')
+        #                caption_file=open("text/"+laststr,"r")
+        #                caption=caption_file.read()
+        #                caption_file.close()
+        #                bot.send_document(chat_id=chat, document=doc,caption=caption)
+        #                doc.close();
         subprocess.call(["rm","-v","description/"+laststr])                
 
 def timetofulltime(t):

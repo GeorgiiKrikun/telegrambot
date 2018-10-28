@@ -21,7 +21,7 @@ chat=''
 updater = Updater(token=receiver,request_kwargs={'read_timeout': 60, 'connect_timeout': 60})
 dispatcher = updater.dispatcher
 
-message_handler=MessageHandler(Filters.all,rec.messagesave)
+message_handler=MessageHandler(Filters.all,rec.messagesave2)
 dispatcher.add_handler(message_handler)
 start_handler = CommandHandler('start',rec.start)
 dispatcher.add_handler(start_handler)
